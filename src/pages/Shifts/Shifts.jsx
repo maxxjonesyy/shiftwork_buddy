@@ -13,7 +13,6 @@ import Swal from "sweetalert2";
 
 import CreateShift from "./CreateShift";
 import ShiftsSummary from "./ShiftsSummary";
-import Rate from "../../components/Rate";
 import Loader from "../../components/Loader";
 
 function Shifts() {
@@ -307,7 +306,6 @@ function Shifts() {
 
       <ShiftsSummary />
       <CreateShift createShiftRef={createShiftRef} />
-      {!user.rate ? <Rate /> : null}
     </div>
   );
 }

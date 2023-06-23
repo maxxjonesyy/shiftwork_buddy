@@ -1,39 +1,39 @@
 import React, { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
-import moment from "moment/moment";
+import moment, { duration } from "moment/moment";
 
 function ShiftsSummary() {
-  const { user, shifts } = useContext(UserContext);
+  const { shifts } = useContext(UserContext);
 
-  function calculateHours() {
-    const hoursArray = [];
-    shifts.forEach((shift) => {
-      const startTime = moment(shift.start, "hh:mm");
-      const finishTime = moment(shift.finish, "hh:mm");
-      const hoursDiff = finishTime.diff(startTime, "hours");
+  let totalHours = 0;
+  let grossIncome = 0;
 
-      if (hoursDiff < 0) {
-        hoursArray.push(startTime.diff(finishTime, "hours") - 7);
-      } else {
-        hoursArray.push(finishTime.diff(startTime, "hours") - 0.25);
-      }
-    });
+  function getHours(start, finish) {
+    let hours = 0;
+    const startTime = moment(start, "hh:mm");
+    const finishTime = moment(finish, "hh:mm");
+    const hoursDiff = finishTime.diff(startTime, "hours");
 
-    return hoursArray.length > 0
-      ? hoursArray.reduce((prev, curr) => prev + curr)
-      : null;
+    if (hoursDiff < 0) {
+      hours = 24 + hoursDiff;
+    } else {
+      hours = hoursDiff - 0.25;
+    }
+    return hours;
   }
 
-  const grossIncome = calculateHours() * user.rate;
-  const yearlyIncome = grossIncome * 26;
+  function getPay(shift) {
+    return getHours(shift.start, shift.finish) * shift.rate;
+  }
 
-  function calculateTax() {
+  function getTax() {
+    const yearlyIncome = grossIncome * 26;
     const taxFree = 18000;
     const lowBracket = ((Math.floor(45000 - 18201) / 26) * 19) / 100;
     const highBracket = (Math.floor((120000 - 45001) / 26) * 32.5) / 100;
 
     if (yearlyIncome < 18200) {
-      return false;
+      return null;
     } else if (yearlyIncome >= 18201 && yearlyIncome <= 45000) {
       const nineteenCents = Math.floor(
         (((yearlyIncome - taxFree) / 26) * 19) / 100
@@ -51,7 +51,10 @@ function ShiftsSummary() {
     }
   }
 
-  calculateTax();
+  shifts.forEach((shift) => {
+    totalHours += getHours(shift.start, shift.finish);
+    grossIncome += getPay(shift);
+  });
 
   const style = {
     container: "py-10 lg:max-w-[75rem] mx-auto",
@@ -64,10 +67,10 @@ function ShiftsSummary() {
     <div className={style.container}>
       <h1 className={style.h1}>Shift Summary:</h1>
       <div className={style.innerContainer}>
-        <p>Total hours: {calculateHours()}</p>
+        <p>Total hours: {totalHours}</p>
         <p>Gross pay: ${grossIncome}</p>
-        <p>Tax paid: {calculateTax() ? `-$${calculateTax()}` : `-$${0}`}</p>
-        <p className={style.netPay}>Net pay: ${grossIncome - calculateTax()}</p>
+        <p>Tax paid: {getTax() ? `-$${getTax()}` : `-$${0}`}</p>
+        <p className={style.netPay}>Net pay: ${grossIncome - getTax()}</p>
       </div>
     </div>
   ) : null;
