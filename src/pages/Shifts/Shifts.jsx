@@ -110,8 +110,6 @@ function Shifts() {
     document.getElementById(`${task}-shifts`).classList.toggle("hidden");
   }
 
-  shifts.sort(sortShifts);
-
   useEffect(() => {
     const shiftColRef = collection(db, `users/${user.uid}/shifts`);
     const userRef = doc(db, "users", user.uid);
@@ -122,6 +120,8 @@ function Shifts() {
     onSnapshot(userRef, (snapshot) => {
       setUser(snapshot.data());
     });
+
+    shifts.sort(sortShifts);
 
     setTimeout(() => {
       setLoading(false);
