@@ -5,8 +5,16 @@ import { db } from "../../../firebase";
 import moment from "moment/moment";
 
 function ShiftsSummary() {
-  const { user, shifts } = useContext(UserContext);
+  const { shifts } = useContext(UserContext);
 
+  let totalHours = 0;
+  let grossIncome = 0;
+
+  function getHours(start, finish) {
+    let hours = 0;
+    const startTime = moment(start, "hh:mm");
+    const finishTime = moment(finish, "hh:mm");
+    const hoursDiff = finishTime.diff(startTime, "hours");
   let totalHours = 0;
   let grossIncome = 0;
 
@@ -50,6 +58,7 @@ function ShiftsSummary() {
 
     if (yearlyIncome < 18200) {
       return null;
+      return null;
     } else if (yearlyIncome >= 18201 && yearlyIncome <= 45000) {
       const nineteenCents = Math.floor(
         (((yearlyIncome - taxFree) / 26) * 19) / 100
@@ -64,10 +73,13 @@ function ShiftsSummary() {
       const thirtySevenCents =
         ((Math.floor(yearlyIncome - 120000) / 26) * 37) / 100;
       return Math.floor(lowBracket + highBracket + thirtySevenCents);
-    } else {
-    }
+    } 
   }
 
+  shifts.forEach((shift) => {
+    totalHours += getHours(shift.start, shift.finish);
+    grossIncome += getPay(shift);
+  });
   shifts.forEach((shift) => {
     totalHours += getHours(shift.start, shift.finish);
     grossIncome += getPay(shift);

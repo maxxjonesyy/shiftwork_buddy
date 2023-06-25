@@ -3,9 +3,9 @@ import { UserContext } from "../context/UserContext";
 
 const style = {
   container:
-    "absolute flex flex-col items-center justify-center w-full top-[45%] p-5",
+    "absolute flex flex-col items-center justify-center w-full top-[40%] p-5",
   h2: "text-2xl text-center font-semibold",
-  lowerContainer: "text-center mt-5 md:text-lg",
+  lowerContainer: "text-center max-w-[600px] mt-5 md:text-lg",
   boldH: "text-[#6d66fa]",
   boldP: "text-[#3f3d55]",
   infoTag: "w-32 p-2 text-base text-white rounded-md bg-primaryBlue mt-5",

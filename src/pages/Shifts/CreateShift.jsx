@@ -47,21 +47,21 @@ function CreateShift({ createShiftRef }) {
     month.value = "Select Month:";
     start.value = "";
     finish.value = "";
+    rate.value = "";
   }
 
   function handleSubmit() {
     const start = document.getElementById("start");
     const finish = document.getElementById("finish");
-    const day = document.getElementById("day");
-    const date = document.getElementById("date");
-    const month = document.getElementById("month");
+    const rate = document.getElementById("rate");
     const container = document.getElementById("shift-container");
 
     if (
       inputForm.day &&
       inputForm.date &&
       inputForm.month &&
-      validateTime(start.value, finish.value)
+      validateTime(start.value, finish.value) &&
+      rate.value !== ""
     ) {
       setDoc(docRef, inputForm);
       resetInputs();
@@ -171,6 +171,14 @@ function CreateShift({ createShiftRef }) {
             type='number'
             className={style.input}
             placeholder='Finish time: 2300'
+            onChange={() => handleStartFinish(event.target.id)}
+          />
+
+          <input
+            id='rate'
+            type='number'
+            className={style.input}
+            placeholder='Hourly Rate'
             onChange={() => handleStartFinish(event.target.id)}
           />
         </div>
