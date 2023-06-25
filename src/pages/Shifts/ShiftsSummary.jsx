@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
@@ -6,6 +6,17 @@ import moment from "moment/moment";
 
 function ShiftsSummary() {
   const { user, shifts } = useContext(UserContext);
+  const [cycle, setCycle] = useState(0);
+
+  useEffect(() => {
+    if (user.cycle === "weekly") {
+      setCycle(52);
+    } else if (user.cycle === "fortnightly") {
+      setCycle(26);
+    } else {
+      setCycle(12);
+    }
+  }, [user.cycle]);
 
   let totalHours = 0;
   let grossIncome = 0;
@@ -34,36 +45,35 @@ function ShiftsSummary() {
   }
 
   function getTax() {
-    let yearlyIncome = 0;
-
-    if (user.cycle === "weekly") {
-      yearlyIncome = grossIncome * 52;
-    } else if (user.cycle === "fortnightly") {
-      yearlyIncome = grossIncome * 26;
-    } else {
-      yearlyIncome = grossIncome * 12;
-    }
+    let yearlyIncome = grossIncome * cycle;
 
     const taxFree = 18000;
-    const lowBracket = ((Math.floor(45000 - 18201) / 26) * 19) / 100;
-    const highBracket = (Math.floor((120000 - 45001) / 26) * 32.5) / 100;
+    const lowBracket = ((Math.floor(45000 - 18201) / cycle) * 19) / 100;
+    const highBracket = (Math.floor((120000 - 45001) / cycle) * 32.5) / 100;
+    const higherBracket = (Math.floor((180000 - 120001) / cycle) * 37) / 100;
 
     if (yearlyIncome < 18200) {
       return null;
     } else if (yearlyIncome >= 18201 && yearlyIncome <= 45000) {
       const nineteenCents = Math.floor(
-        (((yearlyIncome - taxFree) / 26) * 19) / 100
+        (((yearlyIncome - taxFree) / cycle) * 19) / 100
       );
       return Math.floor(nineteenCents);
     } else if (yearlyIncome >= 45001 && yearlyIncome <= 120000) {
-      const thirtyTwoCents = Math.floor(
-        (((yearlyIncome - 45000) / 26) * 32.5) / 100
+      return (
+        Math.floor((((yearlyIncome - 45000) / cycle) * 32.5) / 100) +
+        Math.floor(lowBracket)
       );
-      return Math.floor(lowBracket + thirtyTwoCents);
-    } else {
+    } else if (yearlyIncome >= 120001 && yearlyIncome <= 180000) {
       const thirtySevenCents =
-        ((Math.floor(yearlyIncome - 120000) / 26) * 37) / 100;
+        ((Math.floor(yearlyIncome - 120000) / cycle) * 37) / 100;
       return Math.floor(lowBracket + highBracket + thirtySevenCents);
+    } else {
+      const fourtyFiveCents =
+        ((Math.floor(yearlyIncome - 180000) / cycle) * 45) / 100;
+      return Math.floor(
+        lowBracket + highBracket + higherBracket + fourtyFiveCents
+      );
     }
   }
 
