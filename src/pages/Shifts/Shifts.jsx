@@ -57,25 +57,21 @@ function Shifts() {
     });
   }
 
-  function updateRate() {
-    const userRef = doc(db, "users", user.uid);
+  function deleteAllShifts() {
     Swal.fire({
-      text: "Enter a new rate",
-      input: "number",
-      confirmButtonColor: "#3f3d55",
+      text: "This will DELETE ALL shifts.",
+      icon: "warning",
       showCancelButton: true,
-      footer: `Your current rate is ${user.rate}/hr`,
-      inputValidator: (input) => {
-        if (!input) {
-          return "Please enter a valid rate";
-        } else {
-          setDoc(userRef, { rate: input }, { merge: true });
-          Swal.fire({
-            text: "Your rate has been updated",
-            icon: "success",
-          });
-        }
-      },
+      confirmButtonText: "Delete",
+      confirmButtonColor: "#3f3d55",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        shifts.forEach((shift) => {
+          const loopedShift = shift.id;
+          const docRef = doc(db, "users", user.uid, "shifts", loopedShift);
+          deleteDoc(docRef);
+        });
+      } else null;
     });
   }
 
@@ -135,7 +131,7 @@ function Shifts() {
     heading: "text-xl font-semibold",
     buttonContainer: "flex flex-col md:flex-row",
     createShift: "w-32 p-1 text-base text-white rounded-md bg-primaryBlue",
-    updateRate:
+    deleteAll:
       "w-32 p-1 text-base text-white rounded-md  mt-3 bg-primaryBlue md:ml-5 md:mt-0",
     newUL: "mt-5 overflow-hidden border border-orange-200 rounded-md",
     oldUL: "mt-5 overflow-hidden border border-green-200 rounded-md",
@@ -166,11 +162,13 @@ function Shifts() {
             <button ref={createShiftRef} className={style.createShift}>
               Create Shift
             </button>
-            {user.rate ? (
-              <button className={style.updateRate} onClick={updateRate}>
-                Update Rate
-              </button>
-            ) : null}
+
+            <button
+              className={style.deleteAll}
+              onClick={() => deleteAllShifts()}
+            >
+              Delete All
+            </button>
           </div>
         </div>
 

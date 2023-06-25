@@ -5,16 +5,8 @@ import { db } from "../../../firebase";
 import moment from "moment/moment";
 
 function ShiftsSummary() {
-  const { shifts } = useContext(UserContext);
+  const { user, shifts } = useContext(UserContext);
 
-  let totalHours = 0;
-  let grossIncome = 0;
-
-  function getHours(start, finish) {
-    let hours = 0;
-    const startTime = moment(start, "hh:mm");
-    const finishTime = moment(finish, "hh:mm");
-    const hoursDiff = finishTime.diff(startTime, "hours");
   let totalHours = 0;
   let grossIncome = 0;
 
@@ -25,7 +17,7 @@ function ShiftsSummary() {
     const hoursDiff = finishTime.diff(startTime, "hours");
 
     if (hoursDiff < 0) {
-      hours = hoursDiff + 24 - 0.5;
+      hours = hoursDiff + 24;
     } else {
       hours = hoursDiff - 0.25;
     }
@@ -58,7 +50,6 @@ function ShiftsSummary() {
 
     if (yearlyIncome < 18200) {
       return null;
-      return null;
     } else if (yearlyIncome >= 18201 && yearlyIncome <= 45000) {
       const nineteenCents = Math.floor(
         (((yearlyIncome - taxFree) / 26) * 19) / 100
@@ -69,17 +60,13 @@ function ShiftsSummary() {
         (((yearlyIncome - 45000) / 26) * 32.5) / 100
       );
       return Math.floor(lowBracket + thirtyTwoCents);
-    } else if (yearlyIncome >= 120001 && yearlyIncome <= 180000) {
+    } else {
       const thirtySevenCents =
         ((Math.floor(yearlyIncome - 120000) / 26) * 37) / 100;
       return Math.floor(lowBracket + highBracket + thirtySevenCents);
-    } 
+    }
   }
 
-  shifts.forEach((shift) => {
-    totalHours += getHours(shift.start, shift.finish);
-    grossIncome += getPay(shift);
-  });
   shifts.forEach((shift) => {
     totalHours += getHours(shift.start, shift.finish);
     grossIncome += getPay(shift);
@@ -106,9 +93,9 @@ function ShiftsSummary() {
           onChange={() => setFrequency(event.target.value)}
         >
           <option>Selected: {user.cycle}</option>
-          <option value='weekly'>Weekly</option>
-          <option value='fortnightly'>Fortnightly</option>
-          <option value='monthly'>Monthly</option>
+          <option value='weekly'>weekly</option>
+          <option value='fortnightly'>fortnightly</option>
+          <option value='monthly'>monthly</option>
         </select>
       </div>
       <div className={style.innerContainer}>
