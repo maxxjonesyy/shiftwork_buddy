@@ -209,7 +209,7 @@ function Shifts() {
                       {shift.start} - {shift.finish}
                     </span>
                     <img
-                      src='/icons/close-icon.svg'
+                      src='/icons/delete-shift.svg'
                       alt='delete icon'
                       className={style.closeIcon}
                       onClick={() => deleteShift(shift)}
