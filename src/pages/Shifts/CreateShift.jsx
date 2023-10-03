@@ -77,18 +77,18 @@ function CreateShift({ createShiftRef }) {
   }
 
   const style = {
-    container: "hidden fixed w-full h-full top-0 left-0 p-5",
-    form: "flex flex-col items-center justify-center gap-5 h-full w-full bg-white rounded-lg p-5 mx-auto lg:max-w-[75rem] shadow-lg",
-    topDiv: "flex items-center justify-between my-5 w-full",
+    container: "hidden fixed w-full h-full top-0 left-0",
+    form: "flex flex-col items-center justify-center gap-5 h-full max-w-[900px] bg-white rounded-lg p-5 mx-auto shadow-lg",
+    topDiv: "flex items-center justify-between my-5 w-full bg-accentBlue p-3 rounded-md text-white max-w-[500px]",
     h1: "font-semibold text-xl md:text-2xl",
     image: "hover:cursor-pointer w-5 md:w-7",
-    selectContainer: "flex flex-col gap-5 w-full",
+    selectContainer: "flex flex-col items-center gap-5 w-full max-w-[500px]",
     dropdownButton:
       "w-full h-[50px] rounded-md bg-white px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50",
-    inputContainer: "flex flex-col gap-5 pt-5 w-full",
-    input: "border p-3 rounded-lg text-accentBlue italic text-sm font-semibold",
+    inputContainer: "flex flex-col gap-5 pt-5 w-full max-w-[500px]",
+    input: "border p-3 rounded-lg text-accentBlue italic text-sm font-semibold w-full",
     button:
-      "border p-2 rounded-md bg-accentBlue text-white w-[150px] mb-5 mt-5 w-2/3",
+      "border font-semibold p-2 rounded-md bg-accentBlue text-white w-[150px] mb-5 mt-5 w-2/3",
     screen: "absolute h-screen w-screen bg-black opacity-50 z-[-10]",
   };
 
