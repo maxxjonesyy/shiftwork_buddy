@@ -181,7 +181,7 @@ function Shifts() {
               <h2 className='font-semibold'>Completed Shifts:</h2>
               <img
                 id='collapse-icon'
-                className='transition-all rotate-[90]'
+                className='transition-all'
                 src='/icons/collapse-icon.svg'
                 alt='collapse icon'
                 width={25}
@@ -261,7 +261,7 @@ function Shifts() {
               <h2 className='font-semibold'>Upcoming Shifts:</h2>
               <img
                 id='collapse-icon'
-                className='transition-all rotate-[90]'
+                className='transition-all'
                 src='/icons/collapse-icon.svg'
                 alt='collapse icon'
                 width={25}
