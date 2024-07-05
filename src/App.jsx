@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import Shifts from "./pages/Shifts/Shifts";
-import Greeting from "./components/Greeting";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -19,8 +18,7 @@ function App() {
         <>
           <Navbar />
           <Routes>
-            <Route path='/' element={<Greeting />} />
-            <Route path='/shifts' element={<Shifts />} />
+            <Route path='/' element={<Shifts />} />
           </Routes>
         </>
       )}
