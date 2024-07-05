@@ -13,6 +13,7 @@ function Navbar() {
   }
 
   function logoutUser() {
+    localStorage.removeItem("user");
     setUser(null);
   }
 
