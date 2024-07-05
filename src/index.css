@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  background-color: #f0f0f0;
-  scrollbar-width: none;
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
@@ -21,6 +15,10 @@ input::-webkit-inner-spin-button {
 }
 
 @layer base {
+  html {
+    @apply bg-backgroundGrey;
+  }
+
   body {
     @apply font-montserrat font-medium;
   }
