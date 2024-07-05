@@ -6,7 +6,6 @@
 
 html,
 body {
-  font-family: "Inter", sans-serif;
   background-color: #f0f0f0;
   scrollbar-width: none;
 }
@@ -19,4 +18,10 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@layer base {
+  body {
+    @apply font-montserrat font-medium;
+  }
 }
