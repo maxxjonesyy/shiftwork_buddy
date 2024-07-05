@@ -14,7 +14,7 @@ import {
 } from "/firebase";
 
 function Login() {
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { setUser } = useContext(UserContext);
 
   function createUser(serviceProvider) {
