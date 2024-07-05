@@ -22,4 +22,8 @@ input::-webkit-inner-spin-button {
   body {
     @apply font-montserrat font-medium;
   }
+
+  .nav-link {
+    @apply text-sm transition-colors duration-300 hover:text-accentBlue hover:cursor-pointer;
+  }
 }
