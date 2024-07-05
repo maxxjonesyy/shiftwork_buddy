@@ -5,7 +5,7 @@ function AuthButton(props) {
   return (
     <button
       {...props}
-      className='flex items-center justify-center gap-3 w-full py-2 px-10 rounded-md border border-accentBlue transition-colors duration-300 hover:bg-backgroundGrey'>
+      className='flex items-center justify-center text-sm gap-3 w-full py-2 px-10 rounded-md border border-primaryBlue transition-colors duration-300 hover:border-accentBlue'>
       <img
         src={props.provider === "Google" ? googleURL : githubURL}
         alt='google icon'
