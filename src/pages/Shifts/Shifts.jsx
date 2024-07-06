@@ -1,15 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { db } from "../../../firebase";
-import { monthKey } from "../../utils/ButtonData";
-import {
-  collection,
-  onSnapshot,
-  doc,
-  deleteDoc,
-  setDoc,
-} from "firebase/firestore";
 import { UserContext } from "../../context/UserContext";
-import Swal from "sweetalert2";
+import api from "../../utils/services/api";
 
 import CreateShift from "./CreateShift";
 import ShiftsSummary from "./ShiftsSummary";
@@ -20,109 +11,51 @@ function Shifts() {
   const [loading, setLoading] = useState(true);
   const createShiftRef = useRef();
 
-  const oldShifts = [];
-  const nowShifts = [];
-  const farShifts = [];
+  useEffect(() => {
+    if (user.uid) {
+      setLoading(true);
+      api.getShifts(user, setUser, (fetchedShifts) => {
+        const convertedShifts = api
+          .convertDates(fetchedShifts)
+          .sort((a, b) => a.convertedDate - b.convertedDate);
 
-  shifts.filter((shift) => {
-    const now = new Date();
-    const diff = Date.parse(shift?.convertedDate) - now;
-    const day = diff / 1000 / 60 / 60 / 24;
+        setShifts(convertedShifts);
+      });
 
-    if (shift.checked) {
-      oldShifts.push(shift);
-    } else if (day > 7) {
-      farShifts.push(shift);
-    } else {
-      nowShifts.push(shift);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     }
-  });
+  }, []);
 
-  function deleteShift(passedShift) {
-    const filtered = shifts.filter((shifts) => shifts.id === passedShift.id);
-    const selectedShiftId = filtered[0].id;
-    const docRef = doc(db, "users", user.uid, "shifts", selectedShiftId);
+  const categorizeShifts = (shifts) => {
+    const oldShifts = [];
+    const nowShifts = [];
+    const farShifts = [];
 
-    Swal.fire({
-      text: "Are you sure you want to delete this shift?",
-      footer: `${passedShift.day} ${passedShift.date} ${passedShift.month}, ${passedShift.start}-${passedShift.finish}`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      confirmButtonColor: "#3f3d55",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteDoc(docRef);
-      } else null;
+    shifts.forEach((shift) => {
+      const now = new Date();
+      const shiftDate = new Date(shift.convertedDate);
+      const diffInDays = (shiftDate - now) / (1000 * 60 * 60 * 24);
+
+      if (shift.checked) {
+        oldShifts.push(shift);
+      } else if (diffInDays > 7) {
+        farShifts.push(shift);
+      } else {
+        nowShifts.push(shift);
+      }
     });
-  }
 
-  function deleteAllShifts() {
-    Swal.fire({
-      text: "This will DELETE ALL shifts.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Delete",
-      confirmButtonColor: "#3f3d55",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        shifts.forEach((shift) => {
-          const loopedShift = shift.id;
-          const docRef = doc(db, "users", user.uid, "shifts", loopedShift);
-          deleteDoc(docRef);
-        });
-      } else null;
-    });
-  }
+    return { oldShifts, nowShifts, farShifts };
+  };
 
-  async function setChecked(passedShift) {
-    const filtered = shifts.filter((shifts) => shifts.id === passedShift.id);
-    const selectedShiftId = filtered[0].id;
-    const docRef = doc(db, "users", user.uid, "shifts", selectedShiftId);
+  const { oldShifts, nowShifts, farShifts } = categorizeShifts(shifts);
 
-    setDoc(docRef, { checked: !passedShift.checked }, { merge: true });
-  }
-
-  shifts.forEach((shift) => {
-    const date = Number(shift.date.slice(0, -2));
-    const month = monthKey[shift.month];
-    const year = new Date().getFullYear();
-
-    const convertedDate = `${month}/${date}/${year}`;
-    shift.convertedDate = convertedDate;
-  });
-
-  function sortShifts(a, b) {
-    const dateA = new Date(a.convertedDate);
-    const dateB = new Date(b.convertedDate);
-
-    if (dateA > dateB) return 1;
-    else if (dateA < dateB) return -1;
-    return 0;
-  }
-
-  function toggleCollapse(task) {
+  const toggleCollapse = (task) => {
     document.getElementById("collapse-icon").classList.toggle("rotate-90");
     document.getElementById(`${task}-shifts`).classList.toggle("hidden");
-  }
-
-  useEffect(() => {
-    const shiftColRef = collection(db, `users/${user.uid}/shifts`);
-    const userRef = doc(db, "users", user.uid);
-
-    onSnapshot(shiftColRef, (snapshot) =>
-      setShifts(snapshot.docs.map((doc) => doc.data()))
-    );
-    onSnapshot(userRef, (snapshot) => {
-      setUser(snapshot.data());
-    });
-
-    shifts.sort(sortShifts);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, [shifts.length]);
+  };
 
   const style = {
     container: "relative p-5 h-full",
@@ -165,18 +98,16 @@ function Shifts() {
 
             <button
               className={style.deleteAll}
-              onClick={() => deleteAllShifts()}
-            >
+              onClick={() => api.deleteAllShifts(user, shifts)}>
               Delete All
             </button>
           </div>
         </div>
 
-        {oldShifts?.length >= 1 ? (
+        {oldShifts?.length > 0 && (
           <ul
             className={style.oldUL}
-            onClick={() => toggleCollapse("completed")}
-          >
+            onClick={() => toggleCollapse("completed")}>
             <div className={style.oldDIV}>
               <h2 className='font-semibold'>Completed Shifts:</h2>
               <img
@@ -194,13 +125,12 @@ function Shifts() {
                   <li
                     className={shift.checked ? style.checkedShift : style.li}
                     key={index}
-                    id={`ul-${index}`}
-                  >
+                    id={`ul-${index}`}>
                     <input
                       type='checkbox'
                       checked={shift.checked ? true : false}
                       className={style.checkbox}
-                      onChange={() => setChecked(shift)}
+                      onChange={() => api.setChecked(user, shift)}
                     />
                     <span className={style.span}>
                       {shift.day} {shift.date} {shift.month}
@@ -212,51 +142,51 @@ function Shifts() {
                       src='/icons/delete-shift.svg'
                       alt='delete icon'
                       className={style.closeIcon}
-                      onClick={() => deleteShift(shift)}
+                      onClick={() => api.deleteShift(user, shift)}
                     />
                   </li>
                 );
               })}
             </div>
           </ul>
-        ) : null}
+        )}
 
-        <ul className={style.ul}>
-          {nowShifts.map((shift, index) => {
-            return (
-              <li
-                className={shift.checked ? style.checkedShift : style.li}
-                key={index}
-                id={`ul-${index}`}
-              >
-                <input
-                  type='checkbox'
-                  checked={shift.checked ? true : false}
-                  className={style.checkbox}
-                  onChange={() => setChecked(shift)}
-                />
-                <span className={style.span}>
-                  {shift.day} {shift.date} {shift.month}
-                </span>
-                <span className={style.span}>
-                  {shift.start} - {shift.finish}
-                </span>
-                <img
-                  src='/icons/close-icon.svg'
-                  alt='delete icon'
-                  className={style.closeIcon}
-                  onClick={() => deleteShift(shift)}
-                />
-              </li>
-            );
-          })}
-        </ul>
+        {nowShifts?.length > 0 && (
+          <ul className={style.ul}>
+            {nowShifts.map((shift, index) => {
+              return (
+                <li
+                  className={shift.checked ? style.checkedShift : style.li}
+                  key={index}
+                  id={`ul-${index}`}>
+                  <input
+                    type='checkbox'
+                    checked={shift.checked ? true : false}
+                    className={style.checkbox}
+                    onChange={() => api.setChecked(user, shift)}
+                  />
+                  <span className={style.span}>
+                    {shift.day} {shift.date} {shift.month}
+                  </span>
+                  <span className={style.span}>
+                    {shift.start} - {shift.finish}
+                  </span>
+                  <img
+                    src='/icons/close-icon.svg'
+                    alt='delete icon'
+                    className={style.closeIcon}
+                    onClick={() => api.deleteShift(user, shift)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
-        {farShifts?.length >= 1 ? (
+        {farShifts?.length > 0 && (
           <ul
             className={style.newUL}
-            onClick={() => toggleCollapse("upcoming")}
-          >
+            onClick={() => toggleCollapse("upcoming")}>
             <div className={style.newDIV}>
               <h2 className='font-semibold'>Upcoming Shifts:</h2>
               <img
@@ -274,13 +204,12 @@ function Shifts() {
                   <li
                     className={shift.checked ? style.checkedShift : style.li}
                     key={index}
-                    id={`ul-${index}`}
-                  >
+                    id={`ul-${index}`}>
                     <input
                       type='checkbox'
                       checked={shift.checked ? true : false}
                       className={style.checkbox}
-                      onChange={() => setChecked(shift)}
+                      onChange={() => api.setChecked(user, shift)}
                     />
                     <span className={style.span}>
                       {shift.day} {shift.date} {shift.month}
@@ -292,14 +221,14 @@ function Shifts() {
                       src='/icons/close-icon.svg'
                       alt='delete icon'
                       className={style.closeIcon}
-                      onClick={() => deleteShift(shift)}
+                      onClick={() => api.deleteShift(user, shift)}
                     />
                   </li>
                 );
               })}
             </div>
           </ul>
-        ) : null}
+        )}
       </div>
 
       <ShiftsSummary />
