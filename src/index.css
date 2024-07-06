@@ -20,7 +20,7 @@ input::-webkit-inner-spin-button {
   }
 
   body {
-    @apply font-montserrat font-medium;
+    @apply font-montserrat text-textPrimary font-medium;
   }
 
   .nav-link {

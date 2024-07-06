@@ -26,7 +26,7 @@ function HowDoesItWork() {
         ))}
       </section>
 
-      <p className='mt-10'>
+      <p className='mt-10 text-textSecondary'>
         <span className='font-semibold text-accentBlue'>We do the rest,</span>{" "}
         we’ll store the shift for you to access, edit or delete. Below your
         shifts you will see your income and tax paid, this is calculated from
