@@ -59,47 +59,26 @@ function Shifts() {
     document.getElementById(`${task}-shifts`).classList.toggle("hidden");
   };
 
-  const style = {
-    container: "relative p-5 h-full",
-    innerContainer: "mx-auto lg:max-w-[75rem]",
-    topContainer: "flex items-center justify-between mt-5",
-    heading: "text-xl font-semibold",
-    buttonContainer: "flex flex-col md:flex-row",
-    createShift: "w-32 p-1 text-base text-white rounded-md bg-primaryBlue",
-    deleteAll:
-      "w-32 p-1 text-base text-white rounded-md  mt-3 bg-primaryBlue md:ml-5 md:mt-0",
-    newUL: "mt-5 overflow-hidden border border-orange-200 rounded-md",
-    oldUL: "mt-5 overflow-hidden border border-green-200 rounded-md",
-    ul: "mt-5",
-    li: "flex items-center justify-between p-5 bg-white rounded-lg mt-5 md:flex-none",
-    oldDIV: "flex items-center justify-between p-5 bg-green-100 rounded-md",
-    newDIV: "flex items-center justify-between p-5 bg-orange-100 rounded-md",
-    checkedShift:
-      "flex items-center justify-between p-5 bg-gray-200 rounded-lg mt-5",
-    span: "text-sm md:text-base w-1/2 text-left ml-12",
-    checkbox: "w-5 h-5 accent-[#3f3d55]",
-    editIcon: "w-5 hover:cursor-pointer mr-5",
-    closeIcon: "w-5 hover:cursor-pointer",
-  };
-
   return loading ? (
     <Loader />
   ) : (
-    <div className={style.container}>
-      <div className={style.innerContainer}>
-        <div className={style.topContainer}>
-          <h2 className={style.heading}>
+    <div className='relative p-5 h-full'>
+      <div className='mx-auto lg:max-w-[75rem]'>
+        <div className='flex items-center justify-between mt-5'>
+          <h2 className='text-xl font-semibold'>
             {shifts.length > 0
               ? "Current Shifts"
               : "You have no current shifts"}
           </h2>
-          <div className={style.buttonContainer}>
-            <button ref={createShiftRef} className={style.createShift}>
+          <div className='flex flex-col md:flex-row'>
+            <button
+              ref={createShiftRef}
+              className='w-32 p-1 text-base text-white rounded-md bg-primaryBlue'>
               Create Shift
             </button>
 
             <button
-              className={style.deleteAll}
+              className='w-32 p-1 text-base text-white rounded-md  mt-3 bg-primaryBlue md:ml-5 md:mt-0'
               onClick={() => api.deleteAllShifts(user, shifts)}>
               Delete All
             </button>
@@ -108,9 +87,9 @@ function Shifts() {
 
         {oldShifts?.length > 0 && (
           <ul
-            className={style.oldUL}
+            className='mt-5 overflow-hidden border border-green-200 rounded-md'
             onClick={() => toggleCollapse("completed")}>
-            <div className={style.oldDIV}>
+            <div className='flex items-center justify-between p-5 bg-green-100 rounded-md'>
               <h2 className='font-semibold'>Completed Shifts:</h2>
               <img
                 id='collapse-icon'
@@ -125,25 +104,27 @@ function Shifts() {
               {oldShifts.map((shift, index) => {
                 return (
                   <li
-                    className={shift.checked ? style.checkedShift : style.li}
+                    className={
+                      shift.checked ? "shift--checked" : "shift--unchecked"
+                    }
                     key={index}
                     id={`ul-${index}`}>
                     <input
                       type='checkbox'
                       checked={shift.checked ? true : false}
-                      className={style.checkbox}
+                      className='w-5 h-5 accent-[#3f3d55]'
                       onChange={() => api.setChecked(user, shift)}
                     />
-                    <span className={style.span}>
+                    <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                       {shift.day} {shift.date} {shift.month}
                     </span>
-                    <span className={style.span}>
+                    <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                       {shift.start} - {shift.finish}
                     </span>
                     <img
                       src={closeIcon}
                       alt='delete icon'
-                      className={style.closeIcon}
+                      className='w-5 hover:cursor-pointer'
                       onClick={() => api.deleteShift(user, shift)}
                     />
                   </li>
@@ -154,29 +135,31 @@ function Shifts() {
         )}
 
         {nowShifts?.length > 0 && (
-          <ul className={style.ul}>
+          <ul className='mt-5'>
             {nowShifts.map((shift, index) => {
               return (
                 <li
-                  className={shift.checked ? style.checkedShift : style.li}
+                  className={
+                    shift.checked ? "shift--checked" : "shift--unchecked"
+                  }
                   key={index}
                   id={`ul-${index}`}>
                   <input
                     type='checkbox'
                     checked={shift.checked ? true : false}
-                    className={style.checkbox}
+                    className='w-5 h-5 accent-[#3f3d55]'
                     onChange={() => api.setChecked(user, shift)}
                   />
-                  <span className={style.span}>
+                  <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                     {shift.day} {shift.date} {shift.month}
                   </span>
-                  <span className={style.span}>
+                  <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                     {shift.start} - {shift.finish}
                   </span>
                   <img
                     src={closeIcon}
                     alt='delete icon'
-                    className={style.closeIcon}
+                    className='w-5 hover:cursor-pointer'
                     onClick={() => api.deleteShift(user, shift)}
                   />
                 </li>
@@ -187,9 +170,9 @@ function Shifts() {
 
         {farShifts?.length > 0 && (
           <ul
-            className={style.newUL}
+            className='mt-5 overflow-hidden border border-orange-200 rounded-md'
             onClick={() => toggleCollapse("upcoming")}>
-            <div className={style.newDIV}>
+            <div className='flex items-center justify-between p-5 bg-orange-100 rounded-md'>
               <h2 className='font-semibold'>Upcoming Shifts:</h2>
               <img
                 id='collapse-icon'
@@ -204,25 +187,27 @@ function Shifts() {
               {farShifts.map((shift, index) => {
                 return (
                   <li
-                    className={shift.checked ? style.checkedShift : style.li}
+                    className={
+                      shift.checked ? "shift--checked" : "shift--unchecked"
+                    }
                     key={index}
-                    id={`ul-${index}`}>
+                    id={` -${index}`}>
                     <input
                       type='checkbox'
                       checked={shift.checked ? true : false}
-                      className={style.checkbox}
+                      className='w-5 h-5 accent-[#3f3d55]'
                       onChange={() => api.setChecked(user, shift)}
                     />
-                    <span className={style.span}>
+                    <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                       {shift.day} {shift.date} {shift.month}
                     </span>
-                    <span className={style.span}>
+                    <span className='text-sm md:text-base w-1/2 text-left ml-12'>
                       {shift.start} - {shift.finish}
                     </span>
                     <img
                       src={closeIcon}
                       alt='delete icon'
-                      className={style.closeIcon}
+                      className='w-5 hover:cursor-pointer'
                       onClick={() => api.deleteShift(user, shift)}
                     />
                   </li>

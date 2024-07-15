@@ -27,3 +27,13 @@ input::-webkit-inner-spin-button {
     @apply text-sm transition-colors duration-300 hover:text-accentBlue hover:cursor-pointer;
   }
 }
+
+@layer components {
+  .shift--checked {
+    @apply flex items-center justify-between p-5 bg-gray-200 rounded-lg mt-5;
+  }
+
+  .shift--unchecked {
+    @apply flex items-center justify-between p-5 bg-white rounded-lg mt-5 md:flex-none;
+  }
+}
