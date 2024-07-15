@@ -1,4 +1,4 @@
-import CollapseIcon from "../../public/icons/collapse-icon.svg";
+import CollapseIcon from "../assets/icons/collapse-icon.svg";
 
 function HowDoesItWork() {
   const buttonText = [

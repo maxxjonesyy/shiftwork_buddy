@@ -4,6 +4,7 @@ import Modal from "./Modal";
 import HowDoesItWork from "./HowDoesItWork";
 import NavSettings from "./NavSettings";
 import profile from "../utils/services/profile";
+import hamburgerIcon from "../assets/icons/hamburger-icon.svg";
 
 function Navbar() {
   const { user, setUser } = useContext(UserContext);
@@ -28,7 +29,7 @@ function Navbar() {
 
           <div>
             <img
-              src='/icons/hamburger-icon.svg'
+              src={hamburgerIcon}
               alt='menu toggle'
               className='relative w-7 hover:cursor-pointer md:hidden'
               onMouseEnter={() => setShowSettings(true)}

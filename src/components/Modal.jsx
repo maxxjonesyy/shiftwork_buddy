@@ -1,4 +1,4 @@
-import closeIcon from "../../public/icons/close-icon.svg";
+import closeIcon from "../assets/icons/close-icon.svg";
 
 function Modal(props) {
   if (!props.showModal) return null;

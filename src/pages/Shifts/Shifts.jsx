@@ -5,6 +5,8 @@ import api from "../../utils/services/api";
 import CreateShift from "./CreateShift";
 import ShiftsSummary from "./ShiftsSummary";
 import Loader from "../../components/Loader";
+import closeIcon from "../../assets/icons/close-icon.svg";
+import collapseIcon from "../../assets/icons/collapse-icon.svg";
 
 function Shifts() {
   const { user, setUser, shifts, setShifts } = useContext(UserContext);
@@ -113,7 +115,7 @@ function Shifts() {
               <img
                 id='collapse-icon'
                 className='transition-all'
-                src='/icons/collapse-icon.svg'
+                src={collapseIcon}
                 alt='collapse icon'
                 width={25}
               />
@@ -139,7 +141,7 @@ function Shifts() {
                       {shift.start} - {shift.finish}
                     </span>
                     <img
-                      src='/icons/delete-shift.svg'
+                      src={closeIcon}
                       alt='delete icon'
                       className={style.closeIcon}
                       onClick={() => api.deleteShift(user, shift)}
@@ -172,7 +174,7 @@ function Shifts() {
                     {shift.start} - {shift.finish}
                   </span>
                   <img
-                    src='/icons/close-icon.svg'
+                    src={closeIcon}
                     alt='delete icon'
                     className={style.closeIcon}
                     onClick={() => api.deleteShift(user, shift)}
@@ -192,7 +194,7 @@ function Shifts() {
               <img
                 id='collapse-icon'
                 className='transition-all'
-                src='/icons/collapse-icon.svg'
+                src={collapseIcon}
                 alt='collapse icon'
                 width={25}
               />
@@ -218,7 +220,7 @@ function Shifts() {
                       {shift.start} - {shift.finish}
                     </span>
                     <img
-                      src='/icons/close-icon.svg'
+                      src={closeIcon}
                       alt='delete icon'
                       className={style.closeIcon}
                       onClick={() => api.deleteShift(user, shift)}

@@ -4,6 +4,7 @@ import { dropDownData } from "../../utils/ButtonData";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import Swal from "sweetalert2";
+import closeIcon from "../../assets/icons/close-icon.svg";
 
 function CreateShift({ createShiftRef }) {
   const { user } = useContext(UserContext);
@@ -79,14 +80,16 @@ function CreateShift({ createShiftRef }) {
   const style = {
     container: "hidden fixed w-full h-full top-0 left-0",
     form: "flex flex-col items-center justify-center gap-5 h-full max-w-[900px] bg-white rounded-lg p-5 mx-auto shadow-lg",
-    topDiv: "flex items-center justify-between my-5 w-full bg-accentBlue p-3 rounded-md text-white max-w-[500px]",
+    topDiv:
+      "flex items-center justify-between my-5 w-full bg-accentBlue p-3 rounded-md text-white max-w-[500px]",
     h1: "font-semibold text-xl md:text-2xl",
     image: "hover:cursor-pointer w-5 md:w-7",
     selectContainer: "flex flex-col items-center gap-5 w-full max-w-[500px]",
     dropdownButton:
       "w-full h-[50px] rounded-md bg-white px-3 py-2 font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50",
     inputContainer: "flex flex-col gap-5 pt-5 w-full max-w-[500px]",
-    input: "border p-3 rounded-lg text-accentBlue italic text-sm font-semibold w-full",
+    input:
+      "border p-3 rounded-lg text-accentBlue italic text-sm font-semibold w-full",
     button:
       "border font-semibold p-2 rounded-md bg-accentBlue text-white w-[150px] mb-5 mt-5 w-2/3",
     screen: "absolute h-screen w-screen bg-black opacity-50 z-[-10]",
@@ -98,7 +101,7 @@ function CreateShift({ createShiftRef }) {
         <div className={style.topDiv}>
           <h1 className={style.h1}>Create Shift</h1>
           <img
-            src='/icons/close-icon.svg'
+            src={closeIcon}
             alt='close menu'
             className={style.image}
             onClick={() => {
@@ -114,8 +117,7 @@ function CreateShift({ createShiftRef }) {
             id='day'
             type='button'
             className={style.dropdownButton}
-            onChange={() => handleDropDown(event.target.id)}
-          >
+            onChange={() => handleDropDown(event.target.id)}>
             <option>Select Day:</option>
             {dropDownData.days.map((day, index) => {
               return (
@@ -129,8 +131,7 @@ function CreateShift({ createShiftRef }) {
             id='date'
             type='button'
             className={style.dropdownButton}
-            onChange={() => handleDropDown(event.target.id)}
-          >
+            onChange={() => handleDropDown(event.target.id)}>
             <option>Select Date:</option>
             {dropDownData.dates.map((date, index) => {
               return (
@@ -144,8 +145,7 @@ function CreateShift({ createShiftRef }) {
             id='month'
             type='button'
             className={style.dropdownButton}
-            onChange={() => handleDropDown(event.target.id)}
-          >
+            onChange={() => handleDropDown(event.target.id)}>
             <option>Select Month:</option>
             {dropDownData.months.map((month, index) => {
               return (
