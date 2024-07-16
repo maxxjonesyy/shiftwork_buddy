@@ -29,11 +29,11 @@ input::-webkit-inner-spin-button {
 }
 
 @layer components {
-  .shift--checked {
-    @apply flex items-center justify-between p-5 bg-gray-200 rounded-lg mt-5;
+  .shift--done {
+    @apply flex items-center justify-between p-4 bg-gray-200 rounded-lg mt-5 opacity-80;
   }
 
   .shift--unchecked {
-    @apply flex items-center justify-between p-5 bg-white rounded-lg mt-5 md:flex-none;
+    @apply flex items-center justify-between p-4 bg-white rounded-lg mt-5 md:flex-none;
   }
 }
