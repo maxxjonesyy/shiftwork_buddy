@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import api from "../../utils/services/api";
+import Modal from "../../components/Modal";
 
 import CreateShift from "./CreateShift";
 import ShiftsSummary from "./ShiftsSummary";
@@ -11,7 +12,7 @@ import collapseIcon from "../../assets/icons/collapse-icon.svg";
 function Shifts() {
   const { user, setUser, shifts, setShifts } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
-  const createShiftRef = useRef();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (user.uid) {
@@ -68,7 +69,7 @@ function Shifts() {
 
           <div className='flex items-center gap-3'>
             <button
-              ref={createShiftRef}
+              onClick={() => setShowModal(true)}
               className='px-4 py-2 text-sm text-white rounded-md transition-colors duration-300 bg-primaryBlue hover:bg-accentBlue'>
               Create Shift
             </button>
@@ -155,8 +156,15 @@ function Shifts() {
         )}
       </div>
 
+      {showModal && (
+        <Modal
+          title='Create Shift'
+          component={<CreateShift setShowModal={setShowModal} />}
+          showModal={true}
+          setShowModal={setShowModal}
+        />
+      )}
       <ShiftsSummary />
-      <CreateShift createShiftRef={createShiftRef} />
     </div>
   );
 }
