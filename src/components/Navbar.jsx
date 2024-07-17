@@ -33,6 +33,7 @@ function Navbar() {
               alt='menu toggle'
               className='relative w-7 hover:cursor-pointer md:hidden'
               onMouseEnter={() => setShowSettings(true)}
+              onClick={() => setShowSettings(!showSettings)}
             />
 
             {showSettings && (
