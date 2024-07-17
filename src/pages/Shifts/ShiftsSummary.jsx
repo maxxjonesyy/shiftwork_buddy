@@ -9,9 +9,9 @@ function ShiftsSummary() {
   const [cycle, setCycle] = useState(0);
 
   useEffect(() => {
-    if (user.cycle === "weekly") {
+    if (user.cycle === "Weekly") {
       setCycle(52);
-    } else if (user.cycle === "fortnightly") {
+    } else if (user.cycle === "Fortnightly") {
       setCycle(26);
     } else {
       setCycle(12);
@@ -82,40 +82,32 @@ function ShiftsSummary() {
     grossIncome += getPay(shift);
   });
 
-  const style = {
-    container: "py-10 lg:max-w-[75rem] mx-auto",
-    h1: "font-semibold text-lg ",
-    innerContainer: "pt-5",
-    netPay: "font-semibold text-[#6d66fa]",
-    cycle:
-      "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-[150px] md:w-[200px] p-2",
-    headingContaner:
-      "flex w-full justify-between border-b border-gray-300 pb-2",
-  };
-
-  return shifts.length > 0 ? (
-    <div className={style.container}>
-      <div className={style.headingContaner}>
-        <h1 className={style.h1}>Shift Summary:</h1>
-        <select
-          id='paycycle'
-          className={style.cycle}
-          onChange={() => setFrequency(event.target.value)}
-        >
-          <option>Selected: {user.cycle}</option>
-          <option value='weekly'>weekly</option>
-          <option value='fortnightly'>fortnightly</option>
-          <option value='monthly'>monthly</option>
-        </select>
+  return (
+    shifts.length > 0 && (
+      <div className='py-10 lg:max-w-[75rem] mx-auto'>
+        <div className='flex w-full justify-between border-b border-gray-300 pb-2'>
+          <h1 className='font-semibold text-lg'>Shift Summary:</h1>
+          <select
+            id='paycycle'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-[150px] md:w-[200px] p-2'
+            onChange={(event) => setFrequency(event.target.value)}>
+            <option className='hidden'>{user.cycle || "Fortnightly"}</option>
+            <option value='Weekly'>Weekly</option>
+            <option value='Fortnightly'>Fortnightly</option>
+            <option value='Monthly'>Monthly</option>
+          </select>
+        </div>
+        <div className='pt-5'>
+          <p>Total hours: {totalHours}</p>
+          <p>Gross pay: ${grossIncome}</p>
+          <p>Tax paid: {getTax() ? `-$${getTax()}` : `-$${0}`}</p>
+          <p className='font-semibold text-[#6d66fa]'>
+            Net pay: ${grossIncome - getTax()}
+          </p>
+        </div>
       </div>
-      <div className={style.innerContainer}>
-        <p>Total hours: {totalHours}</p>
-        <p>Gross pay: ${grossIncome}</p>
-        <p>Tax paid: {getTax() ? `-$${getTax()}` : `-$${0}`}</p>
-        <p className={style.netPay}>Net pay: ${grossIncome - getTax()}</p>
-      </div>
-    </div>
-  ) : null;
+    )
+  );
 }
 
 export default ShiftsSummary;

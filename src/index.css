@@ -4,19 +4,40 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  font-family: "Inter", sans-serif;
-  background-color: #f0f0f0;
-  scrollbar-width: none;
-}
-
 ::-webkit-scrollbar {
   display: none;
+}
+
+.swal2-title {
+  font-size: 14px !important;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@layer base {
+  html {
+    @apply bg-backgroundGrey;
+  }
+
+  body {
+    @apply font-montserrat text-textPrimary font-medium;
+  }
+
+  .nav-link {
+    @apply text-sm transition-colors duration-300 hover:text-accentBlue hover:cursor-pointer;
+  }
+}
+
+@layer components {
+  .shift--done {
+    @apply flex items-center justify-between p-4 bg-gray-200 rounded-lg mt-5 opacity-80;
+  }
+
+  .shift--unchecked {
+    @apply flex items-center justify-between p-4 bg-white rounded-lg mt-5 md:flex-none;
+  }
 }

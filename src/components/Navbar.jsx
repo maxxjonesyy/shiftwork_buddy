@@ -1,77 +1,67 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
-import { Link } from "react-router-dom";
-
-import HamburgerToggle from "./HamburgerToggle";
+import Modal from "./Modal";
+import HowDoesItWork from "./HowDoesItWork";
+import NavSettings from "./NavSettings";
+import profile from "../utils/services/profile";
+import hamburgerIcon from "../assets/icons/hamburger-icon.svg";
 
 function Navbar() {
   const { user, setUser } = useContext(UserContext);
-  const hamburgerRef = useRef(null);
-
-  function toggleHamburger() {
-    hamburgerRef.current.classList.toggle("hidden");
-  }
-
-  function logoutUser() {
-    setUser(null);
-  }
-
-  const style = {
-    nav: "bg-white w-full",
-    navInnerContainer:
-      "relative flex items-center justify-between px-5 py-5 lg:max-w-[90rem] lg:mx-auto",
-    navMenu: "hidden md:px-5 md:py-5 md:flex",
-    hamburger: "relative w-9 hover:cursor-pointer md:hidden",
-    containerRight: "flex items-center gap-2",
-    heading: "text-2xl font-semibold md:text-3xl lg:text-4xl",
-    user: "w-12 rounded-full hover:cursor-pointer",
-    li: "hidden items-center gap-2 md:flex",
-    link: "ml-3 p-1 hover:text-[#6d66fa] hover:cursor-pointer",
-  };
+  const [showModal, setShowModal] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <nav className={style.nav}>
-      <div className={style.navInnerContainer}>
-        <img
-          src='/icons/hamburger-icon.svg'
-          alt='menu toggle'
-          className={style.hamburger}
-          onClick={toggleHamburger}
-        />
-        <h1 className={style.heading}>Shiftwork Buddy</h1>
+    <nav className='bg-backgroundWhite shadow-sm'>
+      <div className='relative flex items-center justify-between px-5 py-3 lg:max-w-[75rem] lg:mx-auto xl:px-0'>
+        <h1 className='text-2xl font-semibold'>Shiftwork Buddy</h1>
 
-        <div className={style.containerRight}>
-          <ul className={style.navMenu}>
-            <li className={style.li}>
-              <Link className={style.link} to={"/"}>
-                Home
-              </Link>
-            </li>
-            <li className={style.li}>
-              <Link className={style.link} to={"/shifts"}>
-                Shifts
-              </Link>
-            </li>
-            <li className={style.li}>
-              <span className={style.link} onClick={logoutUser}>
+        <div className='relative flex items-center gap-2'>
+          <ul className='p-3 md:flex'>
+            <li className='hidden items-center gap-2 md:flex'>
+              <button
+                className='nav-link'
+                onClick={() => profile.logout(setUser)}>
                 Logout
-              </span>
+              </button>
             </li>
           </ul>
+
+          <div>
+            <img
+              src={hamburgerIcon}
+              alt='menu toggle'
+              className='relative w-7 hover:cursor-pointer md:hidden'
+              onMouseEnter={() => setShowSettings(true)}
+              onClick={() => setShowSettings(!showSettings)}
+            />
+
+            {showSettings && (
+              <NavSettings
+                setShowModal={setShowModal}
+                setShowSettings={setShowSettings}
+                logoutUser={() => profile.logout(setUser)}
+              />
+            )}
+          </div>
+
           <img
             src={user.image}
             alt='user'
-            className={style.user}
-            onClick={logoutUser}
+            className='w-10 rounded-full hover:cursor-pointer'
+            onClick={() => profile.logout(setUser)}
           />
         </div>
       </div>
 
-      <HamburgerToggle
-        hamburgerRef={hamburgerRef}
-        logoutUser={logoutUser}
-        toggleHamburger={toggleHamburger}
-      />
+      {showModal && (
+        <Modal
+          title='How Does It Work?'
+          component={<HowDoesItWork />}
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
+      )}
     </nav>
   );
 }
