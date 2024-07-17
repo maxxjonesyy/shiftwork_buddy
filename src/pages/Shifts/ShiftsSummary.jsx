@@ -82,30 +82,32 @@ function ShiftsSummary() {
     grossIncome += getPay(shift);
   });
 
-  return shifts.length > 0 ? (
-    <div className='py-10 lg:max-w-[75rem] mx-auto'>
-      <div className='flex w-full justify-between border-b border-gray-300 pb-2'>
-        <h1 className='font-semibold text-lg'>Shift Summary:</h1>
-        <select
-          id='paycycle'
-          className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-[150px] md:w-[200px] p-2'
-          onChange={(event) => setFrequency(event.target.value)}>
-          <option className='hidden'>{user.cycle || "Fortnightly"}</option>
-          <option value='Weekly'>Weekly</option>
-          <option value='Fortnightly'>Fortnightly</option>
-          <option value='Monthly'>Monthly</option>
-        </select>
+  return (
+    shifts.length > 0 && (
+      <div className='py-10 lg:max-w-[75rem] mx-auto'>
+        <div className='flex w-full justify-between border-b border-gray-300 pb-2'>
+          <h1 className='font-semibold text-lg'>Shift Summary:</h1>
+          <select
+            id='paycycle'
+            className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-[150px] md:w-[200px] p-2'
+            onChange={(event) => setFrequency(event.target.value)}>
+            <option className='hidden'>{user.cycle || "Fortnightly"}</option>
+            <option value='Weekly'>Weekly</option>
+            <option value='Fortnightly'>Fortnightly</option>
+            <option value='Monthly'>Monthly</option>
+          </select>
+        </div>
+        <div className='pt-5'>
+          <p>Total hours: {totalHours}</p>
+          <p>Gross pay: ${grossIncome}</p>
+          <p>Tax paid: {getTax() ? `-$${getTax()}` : `-$${0}`}</p>
+          <p className='font-semibold text-[#6d66fa]'>
+            Net pay: ${grossIncome - getTax()}
+          </p>
+        </div>
       </div>
-      <div className='pt-5'>
-        <p>Total hours: {totalHours}</p>
-        <p>Gross pay: ${grossIncome}</p>
-        <p>Tax paid: {getTax() ? `-$${getTax()}` : `-$${0}`}</p>
-        <p className='font-semibold text-[#6d66fa]'>
-          Net pay: ${grossIncome - getTax()}
-        </p>
-      </div>
-    </div>
-  ) : null;
+    )
+  );
 }
 
 export default ShiftsSummary;
