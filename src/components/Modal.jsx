@@ -16,7 +16,7 @@ function Modal(props) {
         className='fixed top-0 left-0 w-full h-full bg-black opacity-80 z-[1]'></div>
       <aside className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[700px] h-autos max-h-[700px] bg-backgroundWhite z-[2] rounded-md p-5 overflow-scroll'>
         <header className='flex justify-between items-center'>
-          <h1 className='text-lg font-semibold'>{props.title}</h1>
+          <h1 className='text-xl font-semibold'>{props.title}</h1>
           <img
             src={closeIcon}
             alt='close modal'
