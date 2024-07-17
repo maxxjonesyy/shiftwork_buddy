@@ -89,8 +89,8 @@ function ShiftsSummary() {
         <select
           id='paycycle'
           className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg w-[150px] md:w-[200px] p-2'
-          onChange={() => setFrequency(event.target.value)}>
-          <option className='hidden'>{user.cycle}</option>
+          onChange={(event) => setFrequency(event.target.value)}>
+          <option className='hidden'>{user.cycle || "Fortnightly"}</option>
           <option value='Weekly'>Weekly</option>
           <option value='Fortnightly'>Fortnightly</option>
           <option value='Monthly'>Monthly</option>
