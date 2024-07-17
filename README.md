@@ -10,4 +10,5 @@ A finance app I made for my shiftwork colleagues, it stores shift data (start an
 * Firebase
 
 ## Screenshots
-<img src="https://github.com/maxxjonesyy/shiftwork_buddy/assets/73814371/fff038f1-7c96-41d1-9a31-e3924d375282" width="550px">
+<img src="https://github.com/user-attachments/assets/fc073f61-7da0-420b-97e5-30fac18da04b" width="550px">
+
